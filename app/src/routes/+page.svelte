@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { City, FeatureDescription } from '../lib/types';
+	import type { City, FeatureDescription, RankedFeature } from '../lib/types';
 
 	const endpoint = 'http://localhost:8000/';
 	const weightColours: Record<number, string> = {
@@ -14,6 +14,7 @@
 	};
 	let cities: City[];
 	let weights: Record<string, number> = {};
+	let keys = [];
 
 	async function getFeatures() {
 		const response = await fetch(`${endpoint}features`);
@@ -29,7 +30,6 @@
 		if (weights[key] > 1) {
 			weights[key] = -1;
 		}
-		console.log(weights);
 		weights = { ...weights };
 	}
 
@@ -43,17 +43,8 @@
 			}
 		});
 		const response = await fetch(`${endpoint}cities?${params.toString()}&limit=5`);
+		keys = Object.keys(weights).filter((key) => weights[key] !== 0);
 		cities = await response.json();
-	}
-
-	function getWeightedKeys() {
-		weights = { ...weights };
-		return Object.entries(weights).reduce((acc, [key, value]) => {
-			if (value !== 0) {
-				acc.push(key);
-			}
-			return acc;
-		}, [] as string[]);
 	}
 
 	onMount(() => {
@@ -75,7 +66,7 @@
 						on:keypress={() => updateWeight(key)}
 						class="flex max-w-[15rem] flex-col {weightColours[
 							weights[key]
-						]} text-gray-100 select-none rounded p-1"
+						]} text-gray-100 cursor-pointer select-none rounded p-1"
 					>
 						<h2 class="text-sm" title={value.description}>{value.label}</h2>
 					</div>
@@ -97,21 +88,26 @@
 		</div>
 	{/if}
 	{#if cities}
-		{#each cities as city}
-			<div class="bg-gray-100 p-2 rounded">
-				<div class="flex justify-between">
-					<h2>{city.name}, {city.country}</h2>
-					<h2 class="text-xs">
-						{city.population.value} inhabitants | {city.meanTemp.value}°C mean temperature | {city
-							.precipitation.value}mm rainfall annualy
-					</h2>
+		{#each cities as city, i}
+			<div class="flex items-center space-x-5">
+				<p>{i + 1}.</p>
+				<div class="bg-gray-100 p-2 rounded flex-grow">
+					<div class="flex justify-between">
+						<h2>{city.name}, {city.country}</h2>
+						<h2 class="text-xs">
+							{city.population.value} inhabitants | {city.meanTemp.value}°C mean temperature | {city
+								.precipitation.value}mm rainfall annualy
+						</h2>
+					</div>
+					<div class="flex flex-wrap gap-1">
+						{#each keys.slice(0, 5) as key}
+							<p class="text-xs">#{city[key].rank} for {features[key].label}.</p>
+						{/each}
+						<a class="text-blue-500 text-xs hover:text-blue-600" href={city.wikidata}
+							>Learn more via WikiData</a
+						>
+					</div>
 				</div>
-				<div class="flex flex-wrap gap-1">
-					{#each getWeightedKeys() as key}
-						<p class="text-xs">#{city[key].rank} for {features[key].label}.</p>
-					{/each}
-				</div>
-				<a class="text-blue-500 text-sm hover:text-blue-600" href={city.wikidata}>Learn more</a>
 			</div>
 		{/each}
 	{/if}
