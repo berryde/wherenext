@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { City, FeatureDescription, RankedFeature } from '../lib/types';
+	import type { City, FeatureDescription } from '../lib/types';
+	import { getFeatures } from '$lib/api';
+	import { goto } from '$app/navigation';
 
-	const endpoint = 'http://localhost:8000/';
 	const weightColours: Record<number, string> = {
 		'-1': 'bg-red-700',
 		'0': 'bg-gray-500',
@@ -12,13 +13,10 @@
 	let features: {
 		[key: string]: FeatureDescription;
 	};
-	let cities: City[];
 	let weights: Record<string, number> = {};
-	let keys = [];
 
-	async function getFeatures() {
-		const response = await fetch(`${endpoint}features`);
-		features = await response.json();
+	async function loadFeatures() {
+		features = await getFeatures();
 		weights = Object.keys(features).reduce((acc, key) => {
 			acc[key] = 0;
 			return acc;
@@ -42,13 +40,12 @@
 				params.append('wanted', key);
 			}
 		});
-		const response = await fetch(`${endpoint}cities?${params.toString()}&limit=5`);
-		keys = Object.keys(weights).filter((key) => weights[key] !== 0);
-		cities = await response.json();
+
+		goto(`/map?${params.toString()}&limit=5`);
 	}
 
 	onMount(() => {
-		getFeatures();
+		loadFeatures();
 	});
 </script>
 
@@ -58,7 +55,7 @@
 		<h2>Find great cities to live in based on your needs.</h2>
 	</div>
 	{#if features}
-		<div class="space-y-2">
+		<div class="space-y-5">
 			<div class="flex flex-wrap gap-2">
 				{#each Object.entries(features) as [key, value]}
 					<div
@@ -72,7 +69,7 @@
 					</div>
 				{/each}
 			</div>
-			<div class="flex justify-between">
+			<div class="flex flex-col">
 				<p class="text-xs">
 					Select a feature to adjust your preferences. Hovering reveals more information.
 				</p>
@@ -86,29 +83,5 @@
 			</div>
 			<button class="bg-blue-500 py-1 px-2 text-gray-100 rounded" on:click={submit}>Submit</button>
 		</div>
-	{/if}
-	{#if cities}
-		{#each cities as city, i}
-			<div class="flex items-center space-x-5">
-				<p>{i + 1}.</p>
-				<div class="bg-gray-100 p-2 rounded flex-grow">
-					<div class="flex justify-between">
-						<h2>{city.name}, {city.country}</h2>
-						<h2 class="text-xs">
-							{city.population.value} inhabitants | {city.meanTemp.value}°C mean temperature | {city
-								.precipitation.value}mm rainfall annualy
-						</h2>
-					</div>
-					<div class="flex flex-wrap gap-1">
-						{#each keys.slice(0, 5) as key}
-							<p class="text-xs">#{city[key].rank} for {features[key].label}.</p>
-						{/each}
-						<a class="text-blue-500 text-xs hover:text-blue-600" href={city.wikidata}
-							>Learn more via WikiData</a
-						>
-					</div>
-				</div>
-			</div>
-		{/each}
 	{/if}
 </main>

@@ -1,8 +1,7 @@
 import { Application, Router } from "https://deno.land/x/oak@v12.1.0/mod.ts";
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import dataset from "./db.json" assert { type: "json" };
-import featureDetails from "./features.ts";
-import type { City } from "./features.ts";
+import { details, RankedFeature, type City } from "./features.ts";
 
 const app = new Application();
 const router = new Router();
@@ -13,6 +12,9 @@ function score(
 	wanted: string[],
 	unwanted: string[]
 ) {
+	if (wanted.length == 0 && unwanted.length == 0) {
+		wanted = Object.keys(details);
+	}
 	const bonus = wanted.reduce((acc, feature) => {
 		const rank = city[feature + "Rank"] as number;
 		return acc + (dataset.length - rank);
@@ -24,44 +26,31 @@ function score(
 	return bonus - penalty;
 }
 
-function serializeCity(city: Record<string, unknown>): City {
-	const serialized = {} as City;
-
-	const keys = Object.keys(dataset[0])
+function serializeCity(city: Record<string, string | number>): City {
+	let keys = Object.keys(dataset[0])
 		.filter((key) => key.endsWith("Rank"))
 		.map((key) => key.replace("Rank", ""));
 
-	for (const key of keys) {
-		// @ts-ignore - key is a string
-		serialized[key] = {
+	// remove keys that aren't features
+	keys = keys.filter((key) => key in details);
+
+	const features: [string, RankedFeature][] = keys.map((key) => [
+		key,
+		{
 			rank: city[key + "Rank"] as number,
 			value: city[key] as number,
-		};
-	}
+		},
+	]);
 
-	serialized.id = city.id as string;
-	serialized.name = city.name as string;
-	serialized.country = city.country as string;
-	serialized.lat = city.lat as number;
-	serialized.lon = city.lon as number;
-	serialized.wikidata = city.wikidata as string;
+	const result = Object.keys(city)
+		.filter((key) => !keys.includes(key))
+		.reduce((acc, key) => {
+			acc[key] = city[key];
+			return acc;
+		}, {} as Record<string, unknown>) as City;
 
-	return serialized;
-}
-
-function getFeatureDetails(feature: string) {
-	if (feature.endsWith("Rank")) {
-		feature = feature.replace("Rank", "");
-	}
-	// check if present in featureDetails
-	if (feature in featureDetails) {
-		//@ts-ignore - key is a string
-		return featureDetails[feature];
-	}
-	return {
-		label: feature,
-		description: "No description available",
-	};
+	result.features = Object.fromEntries(features);
+	return result;
 }
 
 // Compute the magnitude of a city's ranked features
@@ -104,16 +93,7 @@ router.get("/cities", (ctx) => {
 
 // Get the features available for scoring
 router.get("/features", (ctx) => {
-	const keys = Object.keys(dataset[0])
-		.filter((key) => key.endsWith("Rank"))
-		.map((key) => key.replace("Rank", ""));
-
-	const features = keys.reduce((acc, key) => {
-		acc[key] = getFeatureDetails(key);
-		return acc;
-	}, {} as Record<string, unknown>);
-
-	ctx.response.body = features;
+	ctx.response.body = details;
 });
 
 // Get a single city by its ID

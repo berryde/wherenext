@@ -1,4 +1,4 @@
-export default {
+export const details: Record<string, FeatureDescription> = {
 	meanTemp: {
 		label: "Mean Temperature",
 		description: "The average annual temperature.",
@@ -19,26 +19,26 @@ export default {
 		label: "Cost of Living",
 		description: "A rating for the cost of living.",
 	},
-	startups: {
-		label: "Startups",
-		description: "How suitable the city is for startups.",
-	},
-	ventureCapital: {
-		label: "Venture Capital",
-		description: "The amount of venture capital available.",
-	},
+	// startups: {
+	// 	label: "Startups",
+	// 	description: "How suitable the city is for startups.",
+	// },
+	// ventureCapital: {
+	// 	label: "Venture Capital",
+	// 	description: "The amount of venture capital available.",
+	// },
 	travelConnectivity: {
 		label: "Travel Connectivity",
 		description: "The ease of travel from the city.",
 	},
-	commute: {
-		label: "Commute",
-		description: "How suitable the city is for commuters.",
-	},
-	businessFreedom: {
-		label: "Business Freedom",
-		description: "The freedom of businesses to operate in the city.",
-	},
+	// commute: {
+	// 	label: "Commute",
+	// 	description: "How suitable the city is for commuters.",
+	// },
+	// businessFreedom: {
+	// 	label: "Business Freedom",
+	// 	description: "The freedom of businesses to operate in the city.",
+	// },
 	safety: {
 		label: "Safety",
 		description: "The safety of the city.",
@@ -47,22 +47,22 @@ export default {
 		label: "Healthcare",
 		description: "The quality of healthcare.",
 	},
-	education: {
-		label: "Education",
-		description: "The quality of education.",
-	},
-	environmentalQuality: {
-		label: "Environmental Quality",
-		description: "The quality of the surrounding environment.",
-	},
-	economy: {
-		label: "Economy",
-		description: "The strength of the economy.",
-	},
-	taxation: {
-		label: "Taxation",
-		description: "How generous the tax system is.",
-	},
+	// education: {
+	// 	label: "Education",
+	// 	description: "The quality of education.",
+	// },
+	// environmentalQuality: {
+	// 	label: "Environmental Quality",
+	// 	description: "The quality of the surrounding environment.",
+	// },
+	// economy: {
+	// 	label: "Economy",
+	// 	description: "The strength of the economy.",
+	// },
+	// taxation: {
+	// 	label: "Taxation",
+	// 	description: "How generous the tax system is.",
+	// },
 	internetAccess: {
 		label: "Internet Access",
 		description: "The availability of internet access.",
@@ -81,18 +81,18 @@ export default {
 		description:
 			"The proximity and quality of the outdoors in the surrounding area.",
 	},
-	humanFreedom: {
-		label: "Human Freedom",
-		description: "The human rights of people in the city.",
-	},
-	economicFreedom: {
-		label: "Economic Freedom",
-		description: "The economic freedom available to each individual.",
-	},
-	personalFreedom: {
-		label: "Personal Freedom",
-		description: "The freedom of each individual to make their own choices.",
-	},
+	// humanFreedom: {
+	// 	label: "Human Freedom",
+	// 	description: "The human rights of people in the city.",
+	// },
+	// economicFreedom: {
+	// 	label: "Economic Freedom",
+	// 	description: "The economic freedom available to each individual.",
+	// },
+	// personalFreedom: {
+	// 	label: "Personal Freedom",
+	// 	description: "The freedom of each individual to make their own choices.",
+	// },
 	population: {
 		label: "Population",
 		description: "The population of the city.",
@@ -113,30 +113,9 @@ export type City = {
 	id: string;
 	name: string;
 	country: string;
-	meanTemp: RankedFeature;
-	precipitation: RankedFeature;
-	tempRange: RankedFeature;
-	housing: RankedFeature;
-	costOfLiving: RankedFeature;
-	startups: RankedFeature;
-	ventureCapital: RankedFeature;
-	travelConnectivity: RankedFeature;
-	commute: RankedFeature;
-	businessFreedom: RankedFeature;
-	safety: RankedFeature;
-	healthcare: RankedFeature;
-	education: RankedFeature;
-	environmentalQuality: RankedFeature;
-	economy: RankedFeature;
-	taxation: RankedFeature;
-	internetAccess: RankedFeature;
-	leisureAndCulture: RankedFeature;
-	tolerance: RankedFeature;
-	outdoors: RankedFeature;
-	humanFreedom: RankedFeature;
-	economicFreedom: RankedFeature;
-	personalFreedom: RankedFeature;
-	population: RankedFeature;
+	features: {
+		[key: string]: RankedFeature;
+	};
 	lat: number;
 	lon: number;
 	wikidata: string;
