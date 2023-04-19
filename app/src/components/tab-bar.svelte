@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="py-3 md:py-0 md:w-auto md:h-screen w-full md:max-w-min fixed left-0 bottom-0 md:bottom-auto border-t md:border-t-0 md:top-0 md:border-r bg-neutral-50 border-neutral-500"
+	class="py-3 md:py-0 md:w-auto md:h-screen w-full md:max-w-min md:bottom-auto border-t md:border-t-0 md:top-0 md:border-r bg-neutral-50 border-neutral-500"
 >
 	<div
 		class="flex md:flex-col items-center justify-center md:space-x-0 md:space-y-8 md:px-4 md:pt-8 space-x-8"
