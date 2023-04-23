@@ -54,7 +54,7 @@
 	</div>
 	<section class="space-y-4">
 		{#each saved as county}
-			<div class="flex flex-col p-4 border space-y-2 border-gray-300 rounded">
+			<div class="flex flex-col p-4 border space-y-2 border-neutral-400 rounded">
 				<div class="flex justify-between items-center">
 					<h3 class="font-bold text-xl">{county.name}</h3>
 					<div

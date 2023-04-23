@@ -22,11 +22,13 @@
 </script>
 
 <Wrapper>
-	<Title>Adjust weights</Title>
-	<Subtitle
-		>Prioritise features that are important to you for the best results.
-		<InlineLink href="/about">Learn more</InlineLink>
-	</Subtitle>
+	<div>
+		<Title>Adjust weights</Title>
+		<Subtitle
+			>Prioritise features that are important to you for the best results.
+			<InlineLink href="/about">Learn more</InlineLink>
+		</Subtitle>
+	</div>
 	<section class="space-y-4">
 		{#each Object.keys(weights) as weight}
 			<div class="flex flex-col">
