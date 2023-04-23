@@ -2,49 +2,53 @@
 	import Wrapper from '$components/wrapper.svelte';
 	import Choropleth from '$components/choropleth.svelte';
 	import type { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
-	import Title from '$components/title.svelte';
 	import Stars from '$components/stars.svelte';
-	import { flip } from 'svelte/animate';
-	import { linear } from 'svelte/easing';
 
-	async function getGeoJson(): Promise<FeatureCollection<Geometry, GeoJsonProperties>> {
-		const response = await fetch('/counties.json');
-		return await response.json();
-	}
+	let selected = 0;
 
 	const counties: {
 		name: string;
 		stars: number;
+		coords: [number, number];
 	}[] = [
 		{
 			name: 'Alameda',
-			stars: 5
+			stars: 5,
+			coords: [-103.370391, 41.69920999906284]
 		},
 		{
 			name: 'Contra Costa',
-			stars: 4
+			stars: 4,
+			coords: [-103.370391, 41.69920999906284]
 		},
 		{
 			name: 'Marin',
-			stars: 3
+			stars: 3,
+			coords: [-103.370391, 41.69920999906284]
 		},
 		{
 			name: 'Napa',
-			stars: 2
+			stars: 2,
+			coords: [-103.370391, 41.69920999906284]
 		}
 	];
 
+	let map: any;
+
 	function selectCard(i: number) {
 		selected = i;
-		// scroll the element into view
 		document.getElementById(`county-card-${i}`)?.scrollIntoView({
 			behavior: 'smooth',
 			block: 'center',
 			inline: 'center'
 		});
+		map.zoomTo([-103.370391, 41.69920999906284]);
 	}
 
-	let selected = 0;
+	async function getGeoJson(): Promise<FeatureCollection<Geometry, GeoJsonProperties>> {
+		const response = await fetch('/counties.json');
+		return await response.json();
+	}
 </script>
 
 <Wrapper margins={false}>
@@ -52,9 +56,11 @@
 		{#await getGeoJson()}
 			<div class="w-full h-full" />
 		{:then geojson}
-			<Choropleth {geojson} />
+			<Choropleth {geojson} bind:this={map} />
 		{/await}
-		<div class="flex p-4 w-full absolute bottom-0 md:bottom-auto overflow-scroll space-x-4">
+		<div
+			class="flex no-scrollbar md:flex-col md:h-full p-4 w-full md:w-auto absolute bottom-0 md:bottom-auto overflow-x-scroll md:overflow-y-scroll space-x-4 md:space-x-0 md:space-y-4"
+		>
 			{#each counties as county, i}
 				<div
 					id={`county-card-${i}`}
@@ -75,3 +81,14 @@
 		</div>
 	</div>
 </Wrapper>
+
+<style>
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+</style>

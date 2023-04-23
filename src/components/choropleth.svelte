@@ -4,25 +4,30 @@
 	import { zoom } from 'd3-zoom';
 	import { select } from 'd3-selection';
 	import { onDestroy, onMount } from 'svelte';
-	import type { GeoPath } from 'd3-geo';
 	import type { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
-	import type { Feature } from 'geojson';
-	import type { GeoProjection } from 'd3-geo';
+	import type { ZoomBehavior } from 'd3-zoom';
 
 	export let geojson: FeatureCollection<Geometry, GeoJsonProperties>;
 
 	let projection = geoAlbersUsa();
 	let path = geoPath();
+	let z: ZoomBehavior<SVGElement, unknown>;
 
 	$: width = 0;
 	$: height = 0;
 
+	export function zoomTo(pos: [number, number]) {
+		const [x, y] = projection(pos)!;
+		z.translateTo(select<SVGElement, unknown>('#map'), x, y);
+		z.scaleTo(select<SVGElement, unknown>('#map'), 3);
+	}
+
 	onMount(() => {
-		const svg = select<SVGElement, unknown>('#map').call(
-			zoom<SVGElement, unknown>().on('zoom', (event) => {
-				svg.selectAll<SVGGElement, unknown>('g').attr('transform', event.transform);
-			})
-		);
+		z = zoom<SVGElement, unknown>().on('zoom', (event) => {
+			svg.selectAll<SVGGElement, unknown>('g').attr('transform', event.transform);
+		});
+
+		const svg = select<SVGElement, unknown>('#map').call(z);
 		projection = geoAlbersUsa().fitSize([width, height], geojson);
 		path = geoPath().projection(projection);
 	});
