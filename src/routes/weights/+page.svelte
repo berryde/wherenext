@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Button from '$components/button.svelte';
 	import InlineLink from '$components/inline-link.svelte';
 	import Slider from '$components/slider.svelte';
@@ -18,6 +19,26 @@
 	function setWeight(key: string, value: number) {
 		if (!(key in weights)) return;
 		weights = { ...weights, [key]: value };
+	}
+
+	function toCamelCase(s: string) {
+		const split = s.split(' ');
+		return (
+			split[0].toLowerCase() +
+			split
+				.slice(1)
+				.map((s) => s[0].toUpperCase() + s.slice(1))
+				.join('')
+		);
+	}
+
+	function submit() {
+		const params = new URLSearchParams();
+		for (const [key, value] of Object.entries(weights)) {
+			params.append(toCamelCase(key), value.toString());
+		}
+
+		goto(`/map?${params.toString()}`);
 	}
 </script>
 
@@ -45,5 +66,5 @@
 			</div>
 		{/each}
 	</section>
-	<Button>Submit</Button>
+	<Button on:click={() => submit()}>Submit</Button>
 </Wrapper>

@@ -16,6 +16,9 @@ dependencies:
   d3-selection:
     specifier: ^3.0.0
     version: 3.0.0
+  d3-transition:
+    specifier: ^3.0.1
+    version: 3.0.1(d3-selection@3.0.0)
   d3-zoom:
     specifier: ^3.0.0
     version: 3.0.0
@@ -45,6 +48,9 @@ devDependencies:
   '@types/d3-selection':
     specifier: ^3.0.5
     version: 3.0.5
+  '@types/d3-transition':
+    specifier: ^3.0.3
+    version: 3.0.3
   '@types/d3-zoom':
     specifier: ^3.0.2
     version: 3.0.2
@@ -518,6 +524,12 @@ packages:
 
   /@types/d3-time@3.0.0:
     resolution: {integrity: sha512-sZLCdHvBUcNby1cB6Fd3ZBrABbjz3v1Vm90nysCQ6Vt7vd6e/h9Lt7SiJUoEX0l4Dzc7P5llKyhqSi1ycSf1Hg==}
+    dev: true
+
+  /@types/d3-transition@3.0.3:
+    resolution: {integrity: sha512-/S90Od8Id1wgQNvIA8iFv9jRhCiZcGhPd2qX0bKF/PS+y0W5CrXKgIiELd2CvG1mlQrWK/qlYh3VxicqG1ZvgA==}
+    dependencies:
+      '@types/d3-selection': 3.0.5
     dev: true
 
   /@types/d3-zoom@3.0.2:

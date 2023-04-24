@@ -1,48 +1,40 @@
 <script lang="ts">
 	import Wrapper from '$components/wrapper.svelte';
 	import Choropleth from '$components/choropleth.svelte';
-	import type { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
 	import Stars from '$components/stars.svelte';
 	import type { County } from '$lib/domain/county';
+	import geojson from '$lib/assets/counties.json';
+	import type { PageData } from './$types';
 
-	const counties: County[] = [];
+	export let data: PageData;
+	let counties: County[] = data.counties;
+	let selected: County | null = null;
+	let map: typeof Choropleth.prototype;
 
-	let selected: number | null = null;
-	let map: any;
-
-	function selectCard(i: number) {
-		selected = i;
-		document.getElementById(`county-card-${i}`)?.scrollIntoView({
+	function selectCard(e: MouseEvent | KeyboardEvent, county: County) {
+		if (selected == county) return;
+		selected = county;
+		(e.currentTarget as HTMLElement).scrollIntoView({
 			behavior: 'smooth',
 			block: 'center',
 			inline: 'center'
 		});
-		map.zoomTo([-103.370391, 41.69920999906284]);
-	}
-
-	async function getGeoJson(): Promise<FeatureCollection<Geometry, GeoJsonProperties>> {
-		const response = await fetch('/counties.json');
-		return await response.json();
+		map.zoomTo([county.lng, county.lat]);
 	}
 </script>
 
 <Wrapper margins={false}>
 	<div class="flex flex-col h-full bg-neutral-100 relative">
-		{#await getGeoJson()}
-			<div class="w-full h-full" />
-		{:then geojson}
-			<Choropleth {geojson} bind:this={map} />
-		{/await}
+		<Choropleth {geojson} bind:this={map} />
 		<div
 			class="flex no-scrollbar md:flex-col md:h-full p-4 w-full md:w-auto absolute bottom-0 md:bottom-auto overflow-x-scroll md:overflow-y-scroll space-x-4 md:space-x-0 md:space-y-4"
 		>
 			{#each counties as county, i}
 				<div
-					id={`county-card-${i}`}
-					class="py-2 px-4 w-64 space-y-2 flex-shrink-0 rounded border-neutral-400 border bg-neutral-50 {selected ==
-						i && 'border-sky-600 border-2'}"
-					on:click={() => selectCard(i)}
-					on:keydown={() => selectCard(i)}
+					class="py-2 px-4 w-64 select-none space-y-2 transition-colors flex-shrink-0 rounded border-neutral-400 border bg-neutral-50 {selected ==
+						county && 'border-sky-600 bg-sky-50 border-4'}"
+					on:click={(e) => selectCard(e, county)}
+					on:keydown={(e) => selectCard(e, county)}
 				>
 					<div>
 						<h3 class="text-lg font-bold">{county.county}</h3>

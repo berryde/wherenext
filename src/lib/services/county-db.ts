@@ -1,7 +1,12 @@
 import type { County } from '../domain/county';
+import dataset from '$lib/assets/dataset.json';
 
 export default class CountyDB {
-	constructor(private counties: County[]) {}
+	private counties: County[];
+
+	constructor() {
+		this.counties = dataset;
+	}
 
 	/**
 	 * Retrieves all counties in the database.
@@ -16,7 +21,7 @@ export default class CountyDB {
 	 * @param fipsCode The FIPS code of the county to retrieve
 	 * @returns The county with the given FIPS code or undefined if no county with that code exists.
 	 */
-	getCounty(fipsCode: number): County | undefined {
+	getCounty(fipsCode: string): County | undefined {
 		return this.counties.find((county) => county.fipsCode === fipsCode);
 	}
 
@@ -26,8 +31,9 @@ export default class CountyDB {
 	 * @param criteria A set of weights for each feature as a value between 0 and 1.
 	 * @returns The score for the county
 	 */
-	private getScore(county: County, criteria: Record<keyof County, number>): number {
+	private getScore(county: County, criteria: Partial<Record<keyof County, number>>): number {
 		// TODO: Implement this method
+		console.log(county, criteria);
 		return 0;
 	}
 
@@ -36,7 +42,7 @@ export default class CountyDB {
 	 * @param criteria A set of weights for each feature as a value between 0 and 1.
 	 * @param limit The number of counties to return.
 	 */
-	rankCounties(criteria: Record<keyof County, number>, limit = 5): County[] {
+	rankCounties(criteria: Partial<Record<keyof County, number>>, limit: number): County[] {
 		return this.counties
 			.map((county) => ({ ...county, score: this.getScore(county, criteria) }))
 			.sort((a, b) => b.score - a.score)
