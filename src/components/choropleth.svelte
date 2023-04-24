@@ -26,7 +26,6 @@
 		z = zoom<SVGElement, unknown>().on('zoom', (event) => {
 			svg.selectAll<SVGGElement, unknown>('g').attr('transform', event.transform);
 		});
-
 		const svg = select<SVGElement, unknown>('#map').call(z);
 		projection = geoAlbersUsa().fitSize([width, height], geojson);
 		path = geoPath().projection(projection);

@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Subtitle from '$components/subtitle.svelte';
-	import TabBar from '$components/tab-bar.svelte';
 	import Title from '$components/title.svelte';
-	import { page } from '$app/stores';
 	import Wrapper from '$components/wrapper.svelte';
 
 	// a map of feature to description

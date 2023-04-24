@@ -1,7 +1,6 @@
 <script>
 	import Title from '$components/title.svelte';
 	import Subtitle from '$components/subtitle.svelte';
-	import Button from '$components/button.svelte';
 	import Link from '$components/nav-link.svelte';
 	import Wrapper from '$components/wrapper.svelte';
 </script>

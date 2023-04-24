@@ -2,8 +2,8 @@
 	import { page } from '$app/stores';
 	import TabBar from './tab-bar.svelte';
 
-	export let margins = true;
 	export let menubar = true;
+	export let margins = true;
 </script>
 
 <main

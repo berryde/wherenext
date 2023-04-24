@@ -3,36 +3,11 @@
 	import Choropleth from '$components/choropleth.svelte';
 	import type { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
 	import Stars from '$components/stars.svelte';
+	import type { County } from '$lib/domain/county';
 
-	let selected = 0;
+	const counties: County[] = [];
 
-	const counties: {
-		name: string;
-		stars: number;
-		coords: [number, number];
-	}[] = [
-		{
-			name: 'Alameda',
-			stars: 5,
-			coords: [-103.370391, 41.69920999906284]
-		},
-		{
-			name: 'Contra Costa',
-			stars: 4,
-			coords: [-103.370391, 41.69920999906284]
-		},
-		{
-			name: 'Marin',
-			stars: 3,
-			coords: [-103.370391, 41.69920999906284]
-		},
-		{
-			name: 'Napa',
-			stars: 2,
-			coords: [-103.370391, 41.69920999906284]
-		}
-	];
-
+	let selected: number | null = null;
 	let map: any;
 
 	function selectCard(i: number) {
@@ -70,8 +45,8 @@
 					on:keydown={() => selectCard(i)}
 				>
 					<div>
-						<h3 class="text-lg font-bold">{county.name}</h3>
-						<Stars stars={county.stars} />
+						<h3 class="text-lg font-bold">{county.county}</h3>
+						<Stars stars={5} />
 					</div>
 					<p class="leading-5 line-clamp-2 text-sm">
 						Quod Enchiridion Epictetus stoici scripsit. Rodrigo Abela et upident.
