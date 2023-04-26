@@ -9,11 +9,7 @@ const County = z.object({
 	lat: latitude,
 	lng: longitude,
 	population: positiveInteger('Population must be greater than zero'),
-	rentAffordability: Feature,
-	income: Feature,
-	employment: Feature,
-	education: Feature,
-	environment: Feature
+	features: z.record(Feature)
 });
 
 export type County = z.infer<typeof County>;

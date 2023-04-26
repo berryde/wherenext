@@ -58,11 +58,12 @@ if __name__ == "__main__":
     # Construct the output JSON
     res = []
     for _, row in df.iterrows():
-        county = {}
+        county = {"features": {}}
         for col in CONSTANTS:
             county[to_lower_camelcase(col)] = row[to_lower_camelcase(col)]
         for col in FEATURES:
-            county[get_name(col)] = {
+            county["features"][get_name(col)] = {
+                "name": get_name(col),
                 "value": row[get_name(col)],
                 "rank": row[get_name(col) + "Rank"],
                 "percentile": row[get_name(col) + "Percentile"],
