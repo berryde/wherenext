@@ -5,9 +5,12 @@
 	import Wrapper from '$components/wrapper.svelte';
 	import type { County } from '$lib/domain/county';
 	import type { PageData } from './$types';
+	import { scaleLinear } from 'd3-scale';
 	export let data: PageData;
 
 	const county = data.county as County;
+	const datasetSize = 3143;
+
 </script>
 
 <Wrapper margins={false}>
@@ -19,10 +22,12 @@
 		<Subtitle>
 			{county['State']} | Population {county.population}
 		</Subtitle>
-		<div class="flex flex-wrap">
-			<Pill>
-				{JSON.stringify(county)}
-			</Pill>
+		<div class="flex flex-wrap gap-2">
+			{#each Object.keys(county.features) as key}
+				<Pill fill={colour(county.features[key].rank)}>
+					#{JSON.stringify(county.features[key].rank)} for {county.features[key].name}
+				</Pill>
+			{/each}
 		</div>
 	</div>
 </Wrapper>
