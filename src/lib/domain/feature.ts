@@ -2,10 +2,9 @@ import * as z from 'zod';
 import { percentile, positiveInteger } from './schema';
 
 export const Feature = z.object({
-	name: z.string(),
 	value: z.number(),
 	rank: positiveInteger('Rank must be greater than zero'),
-	percentile: percentile
+	percentile: percentile.optional()
 });
 
 export type Feature = z.infer<typeof Feature>;

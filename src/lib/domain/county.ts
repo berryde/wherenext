@@ -3,9 +3,10 @@ import { Feature } from './feature';
 import { fipsCode, latitude, longitude, positiveInteger } from './schema';
 
 const County = z.object({
-	fipsCode: fipsCode,
-	county: z.string(),
-	state: z.string(),
+	'FIPS Code': fipsCode,
+	County: z.string(),
+	State: z.string(),
+	'County, State': z.string(),
 	lat: latitude,
 	lng: longitude,
 	population: positiveInteger('Population must be greater than zero'),

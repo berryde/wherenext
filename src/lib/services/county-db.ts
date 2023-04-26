@@ -5,7 +5,7 @@ export default class CountyDB {
 	private counties: County[];
 
 	constructor() {
-		this.counties = dataset;
+		this.counties = dataset as County[];
 	}
 
 	/**
@@ -22,7 +22,7 @@ export default class CountyDB {
 	 * @returns The county with the given FIPS code or undefined if no county with that code exists.
 	 */
 	getCounty(fipsCode: string): County | undefined {
-		return this.counties.find((county) => county.fipsCode === fipsCode);
+		return this.counties.find((county) => county['FIPS Code'] === fipsCode);
 	}
 
 	/**

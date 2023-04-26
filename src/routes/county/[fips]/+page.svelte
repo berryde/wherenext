@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import Pill from '$components/pill.svelte';
 	import Subtitle from '$components/subtitle.svelte';
 	import Title from '$components/title.svelte';
@@ -12,18 +11,18 @@
 </script>
 
 <Wrapper margins={false}>
-	<div class="w-full h-52 bg-neutral-600"/>
+	<div class="w-full h-52 bg-neutral-600" />
 	<div class="max-w-2xl mx-auto">
 		<Title>
-			{county.county}
+			{county['County']}
 		</Title>
 		<Subtitle>
-			{county.state} | Population {county.population}
+			{county['State']} | Population {county.population}
 		</Subtitle>
 		<div class="flex flex-wrap">
-				<Pill>
-					{JSON.stringify(county.rentAffordability)}
-				</Pill>
+			<Pill>
+				{JSON.stringify(county)}
+			</Pill>
 		</div>
 	</div>
 </Wrapper>
