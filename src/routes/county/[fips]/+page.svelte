@@ -24,8 +24,8 @@
 		</Subtitle>
 		<div class="flex flex-wrap gap-2">
 			{#each Object.keys(county.features) as key}
-				<Pill fill={colour(county.features[key].rank)}>
-					#{JSON.stringify(county.features[key].rank)} for {county.features[key].name}
+				<Pill fill={"green"}>
+					#{JSON.stringify(county.features[key].rank)} for {key}
 				</Pill>
 			{/each}
 		</div>
