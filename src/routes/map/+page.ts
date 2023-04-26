@@ -6,6 +6,6 @@ export const load: PageLoad = ({ url }) => {
 		Array.from(url.searchParams.entries()).map(([key, value]) => [key, parseFloat(value)])
 	);
 	return {
-		counties: db.rankCounties(weights, 10)
+		counties: db.rankCounties(weights, 20)
 	};
 };

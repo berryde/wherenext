@@ -33,7 +33,7 @@ export default class CountyDB {
 	 */
 	private getScore(county: County, criteria: Partial<Record<keyof County, number>>): number {
 		// TODO: Implement this method
-		return 0;
+		return Math.random();
 	}
 
 	/**
@@ -41,10 +41,15 @@ export default class CountyDB {
 	 * @param criteria A set of weights for each feature as a value between 0 and 1.
 	 * @param limit The number of counties to return.
 	 */
-	rankCounties(criteria: Partial<Record<keyof County, number>>, limit: number): County[] {
-		return this.counties
-			.map((county) => ({ ...county, score: this.getScore(county, criteria) }))
-			.sort((a, b) => b.score - a.score)
-			.slice(0, limit);
+	rankCounties(
+		criteria: Partial<Record<keyof County, number>>,
+		limit: number
+	): (County & { score: number })[] {
+		return (
+			this.counties
+				.map((county) => ({ ...county, score: this.getScore(county, criteria) }))
+				// .sort((a, b) => b.score - a.score)
+				.slice(0, limit)
+		);
 	}
 }
