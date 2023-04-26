@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { geoPath, geoAlbersUsa } from 'd3-geo';
-	import { interpolateBlues } from 'd3-scale-chromatic';
+	import { interpolatePuBu } from 'd3-scale-chromatic';
 	import { zoom } from 'd3-zoom';
 	import { select } from 'd3-selection';
 	import { onDestroy, onMount } from 'svelte';
@@ -67,7 +67,7 @@
 		{#if projection && path}
 			<g>
 				{#each geojson.features as feature}
-					<path d={getPath(feature)} fill={interpolateBlues(Math.random())} />
+					<path d={getPath(feature)} fill={interpolatePuBu(Math.random())} />
 				{/each}
 			</g>
 		{/if}

@@ -33,7 +33,6 @@ export default class CountyDB {
 	 */
 	private getScore(county: County, criteria: Partial<Record<keyof County, number>>): number {
 		// TODO: Implement this method
-		console.log(county, criteria);
 		return 0;
 	}
 
