@@ -9,12 +9,8 @@
 <main
 	class="flex flex-col min-h-full md:flex-row-reverse md:justify-end h-screen w-full bg-neutral-50 text-neutral-900"
 >
-	<section
-		class="{margins
-			? 'max-w-2xl p-12'
-			: 'w-full'} h-full md:mx-auto flex-grow overflow-auto space-y-8"
-	>
-		<slot />
+	<section class="flex justify-center overflow-auto h-full md:mx-auto flex-grow space-y-8">
+		<div class="{margins ? 'max-w-2xl p-12' : 'w-full'} h-full"><slot /></div>
 	</section>
 	{#if menubar}
 		<TabBar selected={$page.route.id} />

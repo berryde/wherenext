@@ -6,7 +6,8 @@
 		{ name: 'About', href: '/about', icon: 'ion:information-circle' },
 		{ name: 'Weights', href: '/weights', icon: 'ion:options' },
 		{ name: 'Map', href: '/map', icon: 'ion:map' },
-		{ name: 'Saved', href: '/saved', icon: 'ion:bookmark' }
+		{ name: 'Saved', href: '/saved', icon: 'ion:bookmark' },
+		{ name: 'Compare', href: '/compare', icon: 'ion:contrast' }
 	];
 </script>
 
@@ -19,12 +20,14 @@
 		{#each tabs as tab}
 			<a
 				href={tab.href}
-				class="flex text-lg items-center outline-none {selected === tab.href
+				class="text-lg outline-none {selected === tab.href
 					? 'text-sky-600'
 					: 'text-neutral-600'} font-bold space-x-2 hover:text-sky-800 transition-colors"
 			>
-				<slot />
-				<Icon icon={tab.icon} width="2rem" />
+				<div class="flex flex-col justify-center items-center">
+					<Icon icon={tab.icon} width="2rem" />
+					<p class="text-xs">{tab.name}</p>
+				</div>
 			</a>
 		{/each}
 	</div>

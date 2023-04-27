@@ -25,6 +25,10 @@ export default class CountyDB {
 		return this.counties.find((county) => county['FIPS Code'] === fipsCode);
 	}
 
+	getCountyByNameAndState(name: string): County | undefined {
+		return this.counties.find((county) => county['County, State'] === name);
+	}
+
 	/**
 	 * Scores a county based on the given criteria.
 	 * @param county The county to score
@@ -49,6 +53,7 @@ export default class CountyDB {
 			this.counties
 				.map((county) => ({ ...county, score: this.getScore(county, criteria) }))
 				// .sort((a, b) => b.score - a.score)
+				.sort((a, b) => Math.random() - 0.5)
 				.slice(0, limit)
 		);
 	}
