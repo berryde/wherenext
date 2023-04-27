@@ -32,6 +32,10 @@
 			)
 		} as GeoJsonObject;
 	}
+
+	function viewCounty(fips: string) {
+		window.location.href = `/county/${fips}`;
+	}
 </script>
 
 <Wrapper margins={false}>
@@ -40,9 +44,13 @@
 			{#each data.counties as county, i}
 				<Marker latLng={[county.lat, county.lng]}>
 					<Tooltip>
-						<a href="/county/{county['FIPS Code']}" class="whitespace-nowrap"
-							>{i + 1}. {county['County']}</a
+						<p
+							on:keypress={() => viewCounty(county['FIPS Code'])}
+							on:mouseup={() => viewCounty(county['FIPS Code'])}
+							class="whitespace-nowrap"
 						>
+							{i + 1}. {county['County']}
+						</p>
 					</Tooltip>
 				</Marker>
 			{/each}
@@ -53,14 +61,5 @@
 <style lang="postcss">
 	a {
 		@apply text-neutral-100 text-base;
-	}
-
-	.no-scrollbar::-webkit-scrollbar {
-		display: none;
-	}
-
-	.no-scrollbar {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
 	}
 </style>

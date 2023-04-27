@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     # get the first 24 columns
     CONSTANTS = df.columns[:4]
-    FEATURES = df.columns[5:24]
+    FEATURES = df.columns[4:24]
     GEO = df.columns[-3:]
 
     # Construct the output JSON

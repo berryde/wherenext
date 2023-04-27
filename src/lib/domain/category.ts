@@ -20,6 +20,10 @@ export const categories: Category[] = [
 		key: 'Median Monthly Rent (1-bedroom Flat)',
 		features: [
 			{
+				name: 'Median Monthly Rent (Studio)',
+				prefix: '$'
+			},
+			{
 				name: 'Median Monthly Rent (1-bedroom Flat)',
 				prefix: '$'
 			},

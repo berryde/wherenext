@@ -37,7 +37,7 @@
 		const l = left.features[feature].value;
 		const r = right.features[feature].value;
 
-		const scale = chroma.scale(['#10b981', 'white', '#dc2626']);
+		const scale = chroma.scale(['#dc2626', 'white', '#10b981']);
 
 		return [scale(l / (l + r)), scale(r / (r + l))];
 	}
