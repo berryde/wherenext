@@ -70,9 +70,9 @@
 			<table class="w-full table-auto md:text-lg">
 				<thead class="border">
 					<tr>
-						<th class="border p-2 whitespace-nowrap">{category.name}</th>
-						<th class="border p-2 whitespace-nowrap">{left ? left['County'] : 'County A'}</th>
-						<th class="border p-2 whitespace-nowrap">{right ? right['County'] : 'County B'}</th>
+						<th class="border p-2">{category.name}</th>
+						<th class="border p-2">{left ? left['County'] : 'County A'}</th>
+						<th class="border p-2">{right ? right['County'] : 'County B'}</th>
 					</tr>
 				</thead>
 				{#each category.features as feature}

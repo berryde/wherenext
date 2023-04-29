@@ -96,10 +96,10 @@
 			<table class="table-auto w-full md:text-lg">
 				<thead>
 					<tr>
-						<th class="border p-2 whitespace-nowrap">{category.name}</th>
-						<th class="border p-2 whitespace-nowrap">Percentile</th>
-						<th class="border p-2 whitespace-nowrap">Rank</th>
-						<th class="border p-2 whitespace-nowrap">Value</th>
+						<th class="border p-2">{category.name}</th>
+						<th class="border p-2">Percentile</th>
+						<th class="border p-2">Rank</th>
+						<th class="border p-2">Value</th>
 					</tr>
 				</thead>
 				{#each category.features as feature}
