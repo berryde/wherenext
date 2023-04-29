@@ -75,7 +75,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="max-w-2xl mx-auto space-y-8 py-12">
+	<div class="max-w-2xl mx-auto space-y-8 py-12 px-4">
 		<div class="space-y-4">
 			<Title>
 				{county['County']}
