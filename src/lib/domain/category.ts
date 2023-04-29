@@ -1,6 +1,8 @@
 export type Category = {
 	name: string;
 	key: string;
+	min: number;
+	max: number;
 	features: { name: string; suffix?: string; prefix?: string }[];
 };
 
@@ -8,6 +10,8 @@ export const categories: Category[] = [
 	{
 		name: 'Income',
 		key: 'Median Annual Personal Income',
+		min: 1,
+		max: 2951,
 		features: [
 			{
 				name: 'Median Annual Personal Income',
@@ -17,6 +21,8 @@ export const categories: Category[] = [
 	},
 	{
 		name: 'Rent affordability',
+		min: 1,
+		max: 587,
 		key: 'Median Monthly Rent (1-bedroom Flat)',
 		features: [
 			{
@@ -43,8 +49,9 @@ export const categories: Category[] = [
 	},
 	{
 		name: 'Employment',
-		key: 'Unemployment Rate',
-
+		key: 'Total Labour Force',
+		min: 1,
+		max: 3006,
 		features: [
 			{
 				name: 'Total Labour Force'
@@ -59,6 +66,8 @@ export const categories: Category[] = [
 	},
 	{
 		name: 'Education',
+		min: 1,
+		max: 1907,
 		key: "Adults with Bachelor's Degree or higher",
 		features: [
 			{ name: 'Adults with less than High School Diploma', suffix: '%' },
@@ -78,6 +87,8 @@ export const categories: Category[] = [
 	},
 	{
 		name: 'Environment',
+		min: 1,
+		max: 3143,
 		key: 'Overall Environmental Quality Score',
 		features: [
 			{

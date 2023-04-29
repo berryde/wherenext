@@ -4,11 +4,9 @@
 	import { db } from '$lib/services';
 	import Wrapper from '$components/wrapper.svelte';
 	import type { County } from '$lib/domain/county';
-	import Table from '$components/table.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { categories, type Category } from '$lib/domain/category';
-	import TableRow from '$components/table-row.svelte';
+	import { categories } from '$lib/domain/category';
 	import chroma from 'chroma-js';
 	import Title from '$components/title.svelte';
 	import Subtitle from '$components/subtitle.svelte';
@@ -69,17 +67,17 @@
 		</div>
 
 		{#each categories as category}
-			<table class="w-full table-auto">
+			<table class="w-full table-auto md:text-lg">
 				<thead class="border">
 					<tr>
-						<th class="border py-2 whitespace-nowrap">{category.name}</th>
-						<th class="border">{left ? left['County'] : '-'}</th>
-						<th class="border">{right ? right['County'] : '-'}</th>
+						<th class="border p-2 whitespace-nowrap">{category.name}</th>
+						<th class="border p-2 whitespace-nowrap">{left ? left['County'] : 'County A'}</th>
+						<th class="border p-2 whitespace-nowrap">{right ? right['County'] : 'County B'}</th>
 					</tr>
 				</thead>
 				{#each category.features as feature}
 					<tr class="border text-center">
-						<td class="border text-left pl-1 w-1/3">
+						<td class="border text-left pl-1 w-2/5">
 							{feature.name}
 						</td>
 						{#if left && right}

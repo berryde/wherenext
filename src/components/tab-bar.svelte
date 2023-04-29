@@ -6,7 +6,7 @@
 		{ name: 'About', href: '/about', icon: 'ion:information-circle' },
 		{ name: 'Weights', href: '/weights', icon: 'ion:options' },
 		{ name: 'Map', href: '/map', icon: 'ion:map' },
-		{ name: 'Saved', href: '/saved', icon: 'ion:bookmark' },
+		{ name: 'Saved', href: '/saved', icon: 'ion:bookmarks' },
 		{ name: 'Compare', href: '/compare', icon: 'ion:contrast' }
 	];
 </script>

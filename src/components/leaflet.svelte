@@ -17,12 +17,22 @@
 	setContext('layerGroup', getMap);
 	setContext('layer', getMap);
 	setContext('map', getMap);
+
+	export function zoomTo(pos: [number, number]) {
+		map.setView(pos, 9, {
+			animate: true,
+			duration: 0.5
+		});
+	}
+
 	onMount(async () => {
 		if (browser) {
 			const leaflet = await import('leaflet');
 			map = leaflet
 				.map(mapElement, {
-					zoomControl: false
+					zoomControl: false,
+					attributionControl: false,
+					preferCanvas: true
 				})
 				.setView(view, zoom);
 			// disable pan and zoom if not interactive
@@ -37,7 +47,13 @@
 			}
 			leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 			if (geojson) {
-				leaflet.geoJson(geojson as GeoJsonObject).addTo(map);
+				leaflet
+					.geoJson(geojson as GeoJsonObject, {
+						style: {
+							color: '#0284c7'
+						}
+					})
+					.addTo(map);
 			}
 		}
 	});
@@ -64,5 +80,8 @@
 	}
 	:global(.leaflet-popup-content p) {
 		@apply m-0;
+	}
+	:global(.leaflet-control-attribution) {
+		display: none;
 	}
 </style>

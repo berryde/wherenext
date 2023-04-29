@@ -22,6 +22,10 @@ if __name__ == "__main__":
     FEATURES = df.columns[4:24]
     GEO = df.columns[-3:]
 
+    # print the min and max values for each feature
+    # for col in FEATURES:
+    #     print(col, df["Ranking " + col].min(), df["Ranking " + col].max())
+
     # Construct the output JSON
     res = []
     for _, row in df.iterrows():

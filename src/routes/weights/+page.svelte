@@ -6,36 +6,42 @@
 	import Subtitle from '$components/subtitle.svelte';
 	import Title from '$components/title.svelte';
 	import Wrapper from '$components/wrapper.svelte';
+	import { categories, type Category } from '$lib/domain/category';
+	import { onMount } from 'svelte';
 
 	const [min, max] = [0, 10];
-	let weights: Record<string, number> = {
-		Income: 1,
-		'Rent affordability': 8,
-		Employment: 3,
-		Education: 6,
-		Environment: 9
-	};
+	let weights: Map<Category, number> = new Map();
 
-	function setWeight(key: string, value: number) {
-		if (!(key in weights)) return;
-		weights = { ...weights, [key]: value };
+	onMount(() => {
+		const values = JSON.parse(localStorage.getItem('weights') || '{}');
+		weights = new Map<Category, number>(
+			categories.map((category) => [category, values[category.key] ?? 5])
+		);
+	});
+
+	function resetWeights() {
+		weights = new Map<Category, number>(categories.map((category) => [category, 5]));
+		saveWeights();
 	}
 
-	function toCamelCase(s: string) {
-		const split = s.split(' ');
-		return (
-			split[0].toLowerCase() +
-			split
-				.slice(1)
-				.map((s) => s[0].toUpperCase() + s.slice(1))
-				.join('')
-		);
+	function saveWeights() {
+		const values: Record<string, number> = {};
+		for (const [category, weight] of weights) {
+			values[category.key] = weight;
+		}
+		localStorage.setItem('weights', JSON.stringify(values));
+	}
+
+	function setWeight(category: Category, value: number) {
+		if (!weights.has(category)) return;
+		weights.set(category, value);
+		saveWeights();
 	}
 
 	function submit() {
 		const params = new URLSearchParams();
-		for (const [key, value] of Object.entries(weights)) {
-			params.append(toCamelCase(key), value.toString());
+		for (const [category, weight] of weights) {
+			params.set(category.key, weight.toString());
 		}
 
 		goto(`/map?${params.toString()}`);
@@ -51,20 +57,27 @@
 		</Subtitle>
 	</div>
 	<section class="space-y-4">
-		{#each Object.keys(weights) as weight}
+		{#each categories as category}
 			<div class="flex flex-col">
-				<label for={weight} class="font-bold">{weight}</label>
+				<label for={category.name} class="font-bold">{category.name}</label>
 				<Slider
-					value={weights[weight]}
+					value={weights.get(category)}
 					{min}
 					{max}
 					step={1}
-					id={weight}
-					name={weight}
-					on:change={(e) => setWeight(weight, e.detail)}
+					name={category.name}
+					on:change={(e) => setWeight(category, e.detail)}
 				/>
 			</div>
 		{/each}
+		<div class="flex flex-row text-sm font-light">
+			<p class="w-full flex-grow">Unwanted</p>
+			<p>Neutral</p>
+			<p class="w-full flex-grow flex justify-end">Desired</p>
+		</div>
 	</section>
-	<Button on:click={() => submit()}>Submit</Button>
+	<div class="flex space-x-3">
+		<Button on:click={() => submit()}>Submit</Button>
+		<Button variant="danger" on:click={() => resetWeights()}>Reset</Button>
+	</div>
 </Wrapper>

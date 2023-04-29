@@ -14,7 +14,7 @@
 </script>
 
 <div
-	class="text-sm rounded border max-w-[20rem] text-ellipsis line-clamp-1 px-5 font-bold text-neutral-100 py-1"
+	class="text-xs md:text-sm rounded border max-w-[20rem] text-ellipsis line-clamp-1 px-5 font-bold text-neutral-100 py-1"
 	style="background-color: {fill}; color: {getTextColour()}"
 >
 	<slot />

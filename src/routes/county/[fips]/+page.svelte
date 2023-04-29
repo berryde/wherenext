@@ -9,15 +9,22 @@
 	import geojson from '$lib/assets/counties.json';
 	import { categories } from '$lib/domain/category';
 	import chroma from 'chroma-js';
-	import Button from '$components/button.svelte';
-	import TableRow from '$components/table-row.svelte';
-	import Table from '$components/table.svelte';
+	import Icon from '@iconify/svelte';
+	import { onMount } from 'svelte';
+	import { db } from '$lib/services';
 
 	export let data: PageData;
 
 	const county = data.county as County;
-	const datasetSize = 3143;
-	const getPillColour = chroma.scale(['#10b981', 'white', '#dc2626']).domain([0, datasetSize]);
+
+	function getPillColour(name: string, rank: number) {
+		const category = categories.find((c) => c.name == name);
+		if (!category) return chroma('white');
+		const scale = chroma
+			.scale(['#10b981', 'white', '#dc2626'])
+			.domain([category.min, category.max]);
+		return scale(rank);
+	}
 
 	function getGeoJSON() {
 		return {
@@ -28,82 +35,90 @@
 		};
 	}
 
-	function getHighlights() {
-		// get the 5 lowest rank features
-		const features = categories.map((category) => {
-			const entry = county.features[category.key];
-			return { ...entry, key: category.name };
-		});
-		return features;
-	}
+	onMount(() => {
+		const existing = JSON.parse(localStorage.getItem('saved') || '[]');
+		saved = existing.some((c: County) => c['FIPS Code'] == county['FIPS Code']);
+	});
 
-	function getSummary() {
-		const pros = getHighlights().filter((feature) => feature.rank < 100);
-		const cons = getHighlights().filter((feature) => feature.rank >= datasetSize - 1100);
-		let summary = `${county['County']}  is located in ${county['State']}. It has a population of ${county.population}.`;
-		if (pros.length > 0) {
-			summary += ` ${county['County']} is one of the best counties for ${pros
-				.map((feature) => feature.key.toLowerCase())
-				.join(', ')}.`;
-		}
-		if (cons.length > 0) {
-			summary += ` However, ${county['County']} is one of the worst counties for ${cons
-				.map((feature) => feature.key.toLowerCase())
-				.join(', ')}.`;
-		}
-		return summary;
+	let saved = false;
+
+	function save() {
+		// save this county to localstorage
+		const existing = JSON.parse(localStorage.getItem('saved') || '[]');
+		existing.push(county);
+		localStorage.setItem('saved', JSON.stringify(existing));
+		saved = true;
 	}
 </script>
 
 <Wrapper margins={false}>
-	<div class="h-60 w-full bg-neutral-400 shadow-inner">
+	<div class="relative h-60 w-full bg-neutral-400 shadow-inner">
 		<Leaflet view={[county.lat, county.lng]} interactive={false} zoom={8} geojson={getGeoJSON()} />
-	</div>
-	<div class="max-w-2xl mx-auto space-y-8 p-5 pb-12">
-		<div class="space-y-4">
-			<div class="flex items-center justify-between">
-				<Title>
-					{county['County, State']}
-				</Title>
+		<div class="absolute w-full z-50 left-0 top-0">
+			<div class="flex justify-end mx-auto space-x-3 max-w-2xl p-3">
 				<a
 					href="/compare?left={county['FIPS Code']}"
-					class="px-2 py-1 cursor-pointer border border-sky-600 rounded text-sky-700 hover:bg-sky-600 font-bold hover:text-neutral-100 transition-colors"
+					class="leading-7 px-2 py-1 cursor-pointer bg-sky-600 rounded text-neutral-100 hover:bg-sky-800 font-bold transition-colors"
 					>Compare</a
 				>
+				<div
+					class="p-2 bg-slate-800 rounded cursor-pointer text-yellow-500 hover:text-slate-800 transition-colors hover:bg-yellow-500"
+					on:keypress={() => save()}
+					on:click={() => save()}
+				>
+					<Icon
+						icon={saved ? 'ion:bookmark' : 'ion:bookmark-outline'}
+						class=" h-full w-5"
+						inline={true}
+					/>
+				</div>
 			</div>
-			<p>
-				{getSummary()}
-			</p>
+		</div>
+	</div>
+	<div class="max-w-2xl mx-auto space-y-8 py-12">
+		<div class="space-y-4">
+			<Title>
+				{county['County']}
+			</Title>
+			<Subtitle>
+				{db.getDescription(county)}
+			</Subtitle>
 			<div class="flex flex-wrap gap-2">
-				{#each getHighlights() as highlight}
-					<Pill fill={getPillColour(highlight.rank)}>
-						<p>#{highlight.rank} for {highlight.key}</p>
+				{#each db.getKeyFeatures(county) as feature}
+					<Pill fill={getPillColour(feature.key, feature.rank)}>
+						<p>#{feature.rank} for {feature.key}</p>
 					</Pill>
 				{/each}
 			</div>
 		</div>
-		<hr />
 
 		{#each categories as category}
-			<div class="space-y-2">
-				<p class="text-2xl font-semibold">{category.name}</p>
-				<Table headers={['Category', 'Percentile', 'Rank', 'Value']}>
-					{#each category.features as feature}
-						<TableRow
-							data={[
-								feature.name,
-								county.features[feature.name].percentile
-									? county.features[feature.name].percentile?.toFixed(2) + '%'
-									: '-',
-								county.features[feature.name].rank,
-								(feature.prefix || '') +
-									county.features[feature.name].value +
-									(feature.suffix || '')
-							]}
-						/>
-					{/each}
-				</Table>
-			</div>
+			<table class="table-auto w-full md:text-lg">
+				<thead>
+					<tr>
+						<th class="border p-2 whitespace-nowrap">{category.name}</th>
+						<th class="border p-2 whitespace-nowrap">Percentile</th>
+						<th class="border p-2 whitespace-nowrap">Rank</th>
+						<th class="border p-2 whitespace-nowrap">Value</th>
+					</tr>
+				</thead>
+				{#each category.features as feature}
+					<tr class="border text-center">
+						<td class="border text-left pl-1 w-full">{feature.name}</td>
+						<td class="border">
+							{county.features[feature.name].percentile
+								? county.features[feature.name].percentile?.toFixed(2) + '%'
+								: '-'}
+						</td>
+						<td class=" border">{county.features[feature.name].rank}</td>
+						<td class=" border">
+							{(feature.prefix || '') +
+								county.features[feature.name].value +
+								(feature.suffix || '')}
+						</td>
+					</tr>
+				{/each}
+			</table>
 		{/each}
 	</div>
 </Wrapper>
