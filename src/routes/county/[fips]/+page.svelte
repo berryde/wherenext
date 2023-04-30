@@ -43,11 +43,17 @@
 	let saved = false;
 
 	function save() {
-		// save this county to localstorage
 		const existing = JSON.parse(localStorage.getItem('saved') || '[]');
-		existing.push(county);
-		localStorage.setItem('saved', JSON.stringify(existing));
-		saved = true;
+		if (existing.some((c: County) => c['FIPS Code'] == county['FIPS Code'])) {
+			localStorage.setItem(
+				'saved',
+				JSON.stringify(existing.filter((c: County) => c['FIPS Code'] != county['FIPS Code']))
+			);
+			saved = false;
+		} else {
+			localStorage.setItem('saved', JSON.stringify([...existing, county]));
+			saved = true;
+		}
 	}
 </script>
 
