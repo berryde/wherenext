@@ -70,6 +70,10 @@ export default class CountyDB {
 	 * @returns The score for the county
 	 */
 	private getScore(county: County, criteria: Partial<Record<keyof County, number>>): number {
+		if (!criteria || Object.keys(criteria).length === 0) {
+			criteria = Object.fromEntries(Object.keys(county.features).map((key) => [key, 5]));
+		}
+
 		const max = 10;
 		const min = 0;
 		const mid = (max - min) / 2;
