@@ -66,10 +66,10 @@
 					.geoJson(geojson as GeoJsonObject, {
 						style: (feature) => {
 							return {
-								color: '#404040',
+								color: !interactive ? '#0284c7' : '#404040',
 								weight: 1,
 								fillOpacity: 0.7,
-								fillColor: getColour(feature?.properties.stratum)
+								fillColor: !interactive ? '#0284c7' : getColour(feature?.properties.stratum)
 							};
 						},
 						onEachFeature: (feature, layer) => {
