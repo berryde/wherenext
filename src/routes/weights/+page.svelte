@@ -60,14 +60,16 @@
 		{#each categories as category}
 			<div class="flex flex-col">
 				<label for={category.name} class="font-bold">{category.name}</label>
-				<Slider
-					value={weights.get(category)}
-					{min}
-					{max}
-					step={1}
-					name={category.name}
-					on:change={(e) => setWeight(category, e.detail)}
-				/>
+				{#key weights}
+					<Slider
+						value={weights.get(category)}
+						{min}
+						{max}
+						step={1}
+						name={category.name}
+						on:change={(e) => setWeight(category, e.detail)}
+					/>
+				{/key}
 			</div>
 		{/each}
 		<div class="flex flex-row text-sm font-light">

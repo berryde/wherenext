@@ -53,6 +53,9 @@ export default class CountyDB {
 		criteria: Partial<Record<keyof County, number>>,
 		mid: number
 	): Partial<Record<keyof County, number>> {
+		if (Object.values(criteria).every((v) => v == mid)) {
+			return Object.fromEntries(Object.keys(criteria).map((key) => [key, 1]));
+		}
 		return Object.fromEntries(
 			Object.entries(criteria).map(([key, value]) => {
 				return [key, (value - mid) / mid];
@@ -82,7 +85,7 @@ export default class CountyDB {
 			score += normalisedRank * weight;
 		}
 
-		return score;
+		return score / Object.keys(criteria).length;
 	}
 
 	/**
@@ -93,11 +96,27 @@ export default class CountyDB {
 	rankCounties(
 		criteria: Partial<Record<keyof County, number>>,
 		limit: number
-	): (County & { score: number })[] {
-		return this.counties
+	): (County & { score: number; stratum: number })[] {
+		let counties: (County & { score: number })[] = this.counties
 			.map((county) => ({ ...county, score: this.getScore(county, criteria) }))
 			.sort((a, b) => b.score - a.score)
 			.slice(0, limit);
+
+		// normalise scores to be in the range (0, 1)
+		let [min, max] = [counties[counties.length - 1].score, counties[0].score];
+		counties = counties.map((county) => ({ ...county, score: (county.score - min) / (max - min) }));
+
+		[min, max] = [counties[counties.length - 1].score, counties[0].score];
+		const n = 5;
+		const strata = Array(n + 2)
+			.fill(0)
+			.map((_, i) => min + ((max - min) * i) / (n + 1))
+			.slice(1);
+
+		return counties.map((county) => {
+			const stratum = strata.findIndex((s) => county.score <= s);
+			return { ...county, stratum };
+		});
 	}
 
 	/**

@@ -7,6 +7,6 @@ export const load: PageLoad = ({ url }) => {
 	);
 
 	return {
-		counties: db.rankCounties(weights, 20)
+		counties: db.rankCounties(weights, 100)
 	};
 };

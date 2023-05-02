@@ -4,9 +4,10 @@
 	import { browser } from '$app/environment';
 	import type { Map } from 'leaflet';
 	import type { GeoJsonObject } from 'geojson';
+	import chroma from 'chroma-js';
 
 	export const getMap = () => map;
-	export let geojson: unknown | null = null;
+	export let geojson: typeof import('$lib/assets/counties.json') | null = null;
 	export let view: [number, number] = [0, 0];
 	export let zoom: number = 3;
 	export let interactive = true;
@@ -18,16 +19,24 @@
 	setContext('layer', getMap);
 	setContext('map', getMap);
 
+	export let selectCard: (fips: string) => void = () => {};
+
+	function getColour(stratum: number) {
+		const scale = chroma.scale(['#ef4444', '#fbbf24', '#10b981']).domain([0, 5]);
+		return scale(stratum).hex();
+	}
+
 	export function zoomTo(pos: [number, number]) {
 		map.setView(pos, 9, {
 			animate: true,
 			duration: 0.5
 		});
 	}
+	let leaflet: typeof import('leaflet') | null = null;
 
 	onMount(async () => {
 		if (browser) {
-			const leaflet = await import('leaflet');
+			leaflet = await import('leaflet');
 			map = leaflet
 				.map(mapElement, {
 					zoomControl: false,
@@ -35,7 +44,11 @@
 					preferCanvas: true
 				})
 				.setView(view, zoom);
-			// disable pan and zoom if not interactive
+
+			map.addEventListener('zoomend', () => {
+				zoom = map.getZoom();
+			});
+
 			if (!interactive) {
 				map.dragging.disable();
 				map.touchZoom.disable();
@@ -45,18 +58,33 @@
 				map.keyboard.disable();
 				if (map.tap) map.tap.disable();
 			}
+
 			leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
+
 			if (geojson) {
 				leaflet
 					.geoJson(geojson as GeoJsonObject, {
-						style: {
-							color: '#0284c7'
+						style: (feature) => {
+							return {
+								color: '#404040',
+								weight: 1,
+								fillOpacity: 0.7,
+								fillColor: getColour(feature?.properties.stratum)
+							};
+						},
+						onEachFeature: (feature, layer) => {
+							layer.on({
+								click: () => {
+									selectCard(feature?.properties.fips);
+								}
+							});
 						}
 					})
 					.addTo(map);
 			}
 		}
 	});
+
 	onDestroy(() => {
 		if (map) {
 			map.remove();

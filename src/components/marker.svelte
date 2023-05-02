@@ -39,9 +39,9 @@
 	});
 </script>
 
-<div class="hidden">
+<div class="hidden pointer-events-none">
 	{#if leaflet}
-		<div use:createMarker class="flex">
+		<div use:createMarker class="flex pointer-events-none">
 			{#if marker}
 				<slot />
 			{/if}

@@ -5,11 +5,16 @@
 	import type { PageData } from './$types';
 	import Leaflet from '$components/leaflet.svelte';
 	import Marker from '$components/marker.svelte';
-	import type { GeoJsonObject } from 'geojson';
+	import chroma from 'chroma-js';
 
 	export let data: PageData;
 	let map: typeof Leaflet.prototype;
 	let selected: County | null = null;
+
+	function getScoreColour(score: number) {
+		const scale = chroma.scale(['#ef4444', '#fbbf24', '#10b981']).domain([0, 5]);
+		return scale(score);
+	}
 
 	function selectCard(fips: string) {
 		const county = data.counties.find((county) => county['FIPS Code'] == fips);
@@ -24,54 +29,84 @@
 		map.zoomTo([county.lat, county.lng]);
 	}
 
-	function filterGeoJSON(): GeoJsonObject {
+	function filterGeoJSON() {
 		return {
 			...geojson,
-			features: geojson.features.filter((feature) =>
-				data.counties.some((county) => county['FIPS Code'] == feature.properties['GEOID'])
-			)
-		} as GeoJsonObject;
+			features: geojson.features
+				.filter((feature) =>
+					data.counties.some((county) => county['FIPS Code'] == feature.properties['GEOID'])
+				)
+				.map((feature) => {
+					const county = data.counties.find(
+						(county) => county['FIPS Code'] == feature.properties['GEOID']
+					);
+					if (!county) return feature;
+					return {
+						...feature,
+						properties: {
+							...feature.properties,
+							stratum: county.stratum,
+							fips: county['FIPS Code']
+						}
+					};
+				})
+		};
 	}
+
+	let zoom = 8;
 </script>
 
 <Wrapper margins={false}>
 	<div class="flex flex-col h-full bg-neutral-100 relative">
 		<Leaflet
 			bind:this={map}
-			zoom={6}
+			bind:zoom
 			view={[data.counties[0].lat, data.counties[0].lng]}
 			geojson={filterGeoJSON()}
+			{selectCard}
 		>
-			{#each data.counties as county, i}
-				<Marker latLng={[county.lat, county.lng]}>
-					<div
-						class="flex justify-center"
-						on:keypress={() => selectCard(county['FIPS Code'])}
-						on:click={() => selectCard(county['FIPS Code'])}
-					>
-						<div class="text-overflow-center text-neutral-100 px-1 bg-sky-600 rounded">
-							{county['County']}
+			{#if zoom > 7}
+				{#each data.counties as county, i}
+					<Marker latLng={[county.lat, county.lng]}>
+						<div class="flex justify-center pointer-events-none">
+							<div
+								class="pointer-events-none text-overflow-center text-neutral-100 px-1 {selected ==
+								county
+									? 'bg-sky-600'
+									: 'bg-slate-600 bg-opacity-50'} font-bold rounded"
+							>
+								{county['County']}
+							</div>
 						</div>
-					</div>
-				</Marker>
-			{/each}
+					</Marker>
+				{/each}
+			{/if}
 		</Leaflet>
+
 		<div
 			class="flex no-scrollbar md:flex-col md:h-full z-50 p-4 w-full md:w-auto absolute bottom-0 md:bottom-auto overflow-x-scroll md:overflow-y-scroll space-x-3 md:space-x-0 md:space-y-3"
 		>
 			{#each data.counties as county, i}
 				<div class="select-none flex md:flex-col flex-col-reverse">
 					<div
-						class="shadow py-2 px-4 w-64 select-none space-y-2 transition-colors flex-shrink-0 rounded border-neutral-400 border bg-neutral-50 {selected ==
+						class="shadow py-2 px-4 w-64 select-none space-y-2 transition-colors flex-shrink-0 rounded border-neutral-400 border cursor-pointer hover:bg-sky-100 bg-neutral-50 {selected ==
 							county &&
-							'border-sky-600  border-4 rounded-tl-none md:rounded-tl md:rounded-bl-none'}"
+							'border-sky-600 bg-sky-100 rounded-tl-none md:rounded-tl md:rounded-bl-none'}"
 						id="card-{county['FIPS Code']}"
 						on:click={() => selectCard(county['FIPS Code'])}
 						on:keydown={() => selectCard(county['FIPS Code'])}
 					>
 						<div>
 							<h3 class="font-bold">{i + 1}. {county['County']}</h3>
-							<p>{county['State']}</p>
+							<div class="flex justify-between items-center">
+								<p>{county['State']}</p>
+								<div
+									class="border text-xs text-white font-bold max-w-max px-1 rounded"
+									style="background-color: {getScoreColour(county.stratum)};"
+								>
+									{(county.score * 10).toFixed(1)}
+								</div>
+							</div>
 						</div>
 					</div>
 					{#if selected == county}
