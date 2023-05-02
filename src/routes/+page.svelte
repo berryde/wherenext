@@ -7,10 +7,9 @@
 </script>
 
 <Wrapper menubar={false}>
-	<Title>County Mapper</Title>
+	<Title>NextHome</Title>
 	<Subtitle>
-		Find great US counties to live in based on a wide range of social, economic and environmental
-		factors.
+		We help you choose your NextHome in the U.S. according to your needs with just a few clicks.
 	</Subtitle>
 	<img src={usa} alt="choropleth map of the USA" />
 	<Link href="/weights">Get started</Link>
