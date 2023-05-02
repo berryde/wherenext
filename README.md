@@ -1,3 +1,3 @@
-# county-mapper
+# NextHome
 
-A web application for finding great US counties to live in based on a wide range of social, economic and environmental factors.
+We help you choose your NextHome in the U.S. according to your needs with just a few clicks
