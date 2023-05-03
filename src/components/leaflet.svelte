@@ -27,7 +27,7 @@
 	}
 
 	export function zoomTo(pos: [number, number]) {
-		map.setView(pos, 9, {
+		map.setView(pos, 8, {
 			animate: true,
 			duration: 0.5
 		});

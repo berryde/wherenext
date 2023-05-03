@@ -36,7 +36,7 @@
 	<input
 		{placeholder}
 		bind:value
-		class="text-center border-neutral-300 border p-1 rounded w-full h-full"
+		class="px-2 border-neutral-300 border p-1 rounded w-full h-full"
 		type="text"
 		on:input={handleInput}
 	/>

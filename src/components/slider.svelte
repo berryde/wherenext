@@ -10,20 +10,32 @@
 	export let id: string | null = null;
 	export let name: string | null = null;
 
+	export let variant: 'weight' | 'basic' = 'weight';
+
+	function getStyle() {
+		switch (variant) {
+			case 'weight':
+				return 'bg-gradient-to-r from-red-500 via-neutral-200 to-emerald-500';
+			case 'basic':
+			default:
+				return 'bg-gradient-to-r from-neutral-200 to-neutral-200';
+		}
+	}
+
 	function handleChange(event: Event) {
 		const target = event.target as HTMLInputElement;
-		dispatch('change', +target.value);
+		value = parseInt(target.value);
+		dispatch('change', target.value);
 	}
 
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement;
-		dispatch('input', +target.value);
+		value = parseInt(target.value);
+		dispatch('input', target.value);
 	}
 </script>
 
-<div
-	class="bg-gradient-to-r from-red-500 via-neutral-200 to-emerald-500 border rounded flex items-center"
->
+<div class="{getStyle()} border rounded flex items-center">
 	<input
 		{id}
 		{name}

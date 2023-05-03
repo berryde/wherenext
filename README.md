@@ -1,3 +1,3 @@
-# NextHome
+# WhereNext
 
-We help you choose your NextHome in the U.S. according to your needs with just a few clicks
+Where's next? We help you choose your next location in the U.S. according to your needs with just a few clicks

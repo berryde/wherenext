@@ -6,6 +6,9 @@
 	import Leaflet from '$components/leaflet.svelte';
 	import Marker from '$components/marker.svelte';
 	import chroma from 'chroma-js';
+	import Autocomplete from '$components/autocomplete.svelte';
+	import { page } from '$app/stores';
+	import Icon from '@iconify/svelte';
 
 	export let data: PageData;
 	let map: typeof Leaflet.prototype;
@@ -27,6 +30,7 @@
 			inline: 'center'
 		});
 		map.zoomTo([county.lat, county.lng]);
+		autocompleteValue = county['County, State'];
 	}
 
 	function filterGeoJSON() {
@@ -53,7 +57,14 @@
 		};
 	}
 
+	function handleAutocompleteSelect(name: string) {
+		const county = data.counties.find((county) => county['County, State'] == name);
+		if (!county) return;
+		selectCard(county['FIPS Code']);
+	}
+
 	let zoom = 8;
+	let autocompleteValue = '';
 </script>
 
 <Wrapper margins={false}>
@@ -83,6 +94,28 @@
 			{/if}
 		</Leaflet>
 
+		<div class="absolute h-3 z-50 space-y-2 right-3 top-3">
+			<div class="bg-neutral-50 border border-neutral-300 p-1 pb-0 rounded">
+				<div class="flex flex-row-reverse w-full h-2">
+					{#each Array(5).fill(0) as _, i}
+						<div
+							class="w-full {i == 0 && 'rounded-r-sm'} {i == 4 && 'rounded-l-sm'}"
+							style="background-color: {getScoreColour(i)};"
+						/>
+					{/each}
+				</div>
+				<div class="flex text-[0.6rem] justify-between">
+					<p>#1</p>
+					<p>#{$page.url.searchParams.get('limit') || 100}</p>
+				</div>
+			</div>
+			<Autocomplete
+				on:select={(e) => handleAutocompleteSelect(e.detail)}
+				bind:value={autocompleteValue}
+				placeholder="Search for a county"
+				options={data.counties.map((c) => c['County, State'])}
+			/>
+		</div>
 		<div
 			class="flex no-scrollbar md:flex-col md:h-full z-50 p-4 w-full md:w-auto absolute bottom-0 md:bottom-auto overflow-x-scroll md:overflow-y-scroll space-x-3 md:space-x-0 md:space-y-3"
 		>

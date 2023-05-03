@@ -101,6 +101,7 @@ export default class CountyDB {
 		criteria: Partial<Record<keyof County, number>>,
 		limit: number
 	): (County & { score: number; stratum: number })[] {
+		console.log(criteria, limit);
 		let counties: (County & { score: number })[] = this.counties
 			.map((county) => ({ ...county, score: this.getScore(county, criteria) }))
 			.sort((a, b) => b.score - a.score)
@@ -108,7 +109,7 @@ export default class CountyDB {
 
 		// normalise scores to be in the range (0, 1)
 		let [min, max] = [counties[counties.length - 1].score, counties[0].score];
-		counties = counties.map((county) => ({ ...county, score: (county.score - min) / (max - min) }));
+		counties = counties.map((county) => ({ ...county, score: county.score / max }));
 
 		[min, max] = [counties[counties.length - 1].score, counties[0].score];
 		const n = 5;

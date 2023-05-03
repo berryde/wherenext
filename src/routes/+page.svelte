@@ -7,9 +7,10 @@
 </script>
 
 <Wrapper menubar={false}>
-	<Title>NextHome</Title>
+	<Title>WhereNext</Title>
 	<Subtitle>
-		We help you choose your NextHome in the U.S. according to your needs with just a few clicks.
+		Where's next? We help you choose your next location in the U.S. according to your needs with
+		just a few clicks
 	</Subtitle>
 	<img src={usa} alt="choropleth map of the USA" />
 	<Link href="/weights">Get started</Link>
