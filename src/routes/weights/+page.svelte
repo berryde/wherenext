@@ -82,7 +82,7 @@
 			<p class="w-full flex-grow flex justify-end">Desired</p>
 		</div>
 
-		<div class="mt-4 flex space-y-1 flex-col">
+		<div class="my-8 flex space-y-1 flex-col">
 			<label for={'count'} class="font-bold">Number of results</label>
 			<Slider variant={'basic'} bind:value={limit} min={50} max={250} step={50} name="count" />
 
