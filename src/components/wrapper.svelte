@@ -12,7 +12,7 @@
 	<section class="flex justify-center overflow-auto h-full md:mx-auto flex-grow">
 		<div class="{margins ? 'max-w-2xl md:pt-8 p-4 ' : 'w-full'} space-y-4 h-full">
 			<slot />
-			<div class="w-full h-4" />
+			<div class="w-full h-4 md:hidden" />
 		</div>
 	</section>
 	{#if menubar}
