@@ -9,7 +9,6 @@ export const load: PageLoad = ({ url }) => {
 			.map(([key, value]) => [key, parseFloat(value)])
 	);
 	const limit = parseInt(url.searchParams.get('limit') ?? '100', 10);
-	console.log(limit);
 
 	return {
 		counties: db.rankCounties(weights, limit)

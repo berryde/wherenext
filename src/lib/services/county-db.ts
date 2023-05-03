@@ -101,7 +101,6 @@ export default class CountyDB {
 		criteria: Partial<Record<keyof County, number>>,
 		limit: number
 	): (County & { score: number; stratum: number })[] {
-		console.log(criteria, limit);
 		let counties: (County & { score: number })[] = this.counties
 			.map((county) => ({ ...county, score: this.getScore(county, criteria) }))
 			.sort((a, b) => b.score - a.score)

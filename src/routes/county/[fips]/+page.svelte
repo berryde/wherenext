@@ -57,11 +57,11 @@
 	}
 </script>
 
-<Wrapper margins={false}>
+<Wrapper margins={false} padding={false}>
 	<div class="relative h-60 w-full bg-neutral-400 shadow-inner">
 		<Leaflet view={[county.lat, county.lng]} interactive={false} zoom={8} geojson={getGeoJSON()} />
 		<div class="absolute w-full z-50 left-0 top-0">
-			<div class="flex justify-end mx-auto space-x-3 max-w-2xl p-3">
+			<div class="flex justify-end mx-auto space-x-3 max-w-3xl p-3">
 				<a
 					href="/compare?left={county['FIPS Code']}"
 					class="leading-7 px-2 py-1 cursor-pointer bg-sky-600 rounded text-neutral-100 hover:bg-sky-800 font-bold transition-colors"
@@ -81,7 +81,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="max-w-2xl mx-auto space-y-8 py-12 px-4">
+	<div class="max-w-3xl mx-auto space-y-8 py-12 px-4">
 		<div class="space-y-4">
 			<Title>
 				{county['County']}

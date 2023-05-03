@@ -51,7 +51,7 @@
 </script>
 
 <Wrapper>
-	<div>
+	<div class="w-full">
 		<Title>Adjust weights</Title>
 		<Subtitle
 			>Prioritise features that are important to you for the best results.

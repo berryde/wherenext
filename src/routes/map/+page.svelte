@@ -67,7 +67,7 @@
 	let autocompleteValue = '';
 </script>
 
-<Wrapper margins={false}>
+<Wrapper margins={false} padding={false}>
 	<div class="flex flex-col h-full bg-neutral-100 relative">
 		<Leaflet
 			bind:this={map}
@@ -93,7 +93,6 @@
 				{/each}
 			{/if}
 		</Leaflet>
-
 		<div class="absolute h-3 z-50 space-y-2 right-3 top-3">
 			<div class="bg-neutral-50 border border-neutral-300 p-1 pb-0 rounded">
 				<div class="flex flex-row-reverse w-full h-2">

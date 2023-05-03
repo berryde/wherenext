@@ -17,7 +17,7 @@
 		<img
 			src={examples}
 			alt="screenshots of the application"
-			class="px-5 md:max-w-2xl mx-auto py-5 md:py-10"
+			class="px-5 md:max-w-3xl mx-auto py-5 md:py-10"
 		/>
 	</div>
 </Wrapper>

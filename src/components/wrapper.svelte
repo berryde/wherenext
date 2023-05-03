@@ -4,15 +4,17 @@
 
 	export let menubar = true;
 	export let margins = true;
+	export let padding = true;
 </script>
 
 <main
-	class="flex flex-col min-h-full md:flex-row-reverse md:justify-end h-screen w-full bg-neutral-50 text-neutral-900"
+	class="flex flex-col absolute inset-0 md:flex-row-reverse md:justify-end h-screen w-full bg-neutral-50 text-neutral-900"
 >
-	<section class="flex justify-center overflow-auto h-full md:mx-auto flex-grow">
-		<div class="{margins ? 'max-w-2xl md:pt-8 p-4 ' : 'w-full'} space-y-4 h-full">
+	<section
+		class="flex flex-col {padding && 'p-4'} h-full space-y-4 overflow-auto w-full items-center"
+	>
+		<div class="space-y-4 {margins ? 'max-w-2xl' : 'w-full'} {padding ? 'h-fit' : 'h-full'}">
 			<slot />
-			<div class="w-full h-4 md:hidden" />
 		</div>
 	</section>
 	{#if menubar}
