@@ -4,6 +4,10 @@ import json
 if __name__ == "__main__":
     df = pd.read_csv("scripts/input/dataset.csv")
     geodata = pd.read_csv("scripts/input/geodata.csv")
+    percentiles = pd.read_csv("scripts/input/percentiles.csv")
+
+    df = df.merge(percentiles, on="FIPS Code", how="left")
+    df = df.rename(columns=lambda x: x[:-2] if x.endswith("_x") else x)
 
     # Convert FIPS Code to string
     df["FIPS Code"] = df["FIPS Code"].astype(str).str.zfill(5)
@@ -17,7 +21,6 @@ if __name__ == "__main__":
     geodata = geodata[["FIPS Code", "lat", "lng", "population"]]
     df = df.merge(geodata, on="FIPS Code")
 
-    # get the first 24 columns
     CONSTANTS = df.columns[:4]
     FEATURES = df.columns[4:24]
     GEO = df.columns[-3:]
